@@ -5,6 +5,7 @@
     "php": ">=7.2.0",
     "ext-json": "*",
     "yiisoft/yii2": "~2.0.28",
+    "yiisoft/yii2-httpclient": "~2",
     "hiqdev/composer-config-plugin": "~0.3"
   },
   "require-dev": {
@@ -42,6 +43,20 @@
       "web": [
         "$common",
         "config/web.php"
+      ],
+      "tests": [
+        "$common",
+        "config/tests.php"
+      ],
+      "tests-web": [
+        "$web",
+        "$tests",
+        "config/tests-web.php"
+      ],
+      "tests-cli": [
+        "$console",
+        "$tests",
+        "config/tests-cli.php"
       ]
     }
   }

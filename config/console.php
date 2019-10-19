@@ -1,3 +1,5 @@
-<?php
+<?php /** @noinspection PhpUndefinedVariableInspection */
 
-return [];
+return [
+
+];
