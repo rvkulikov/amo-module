@@ -1,0 +1,26 @@
+actor: Tester
+namespace: rvkulikov\amo\module\tests\codeception
+paths:
+  tests: tests/codeception
+  log: tests/codeception/_output
+  data: tests/codeception/_data
+  helpers: tests/codeception/_support
+settings:
+  bootstrap: _bootstrap.php
+  suite_class: \PHPUnit_Framework_TestSuite
+  memory_limit: 1024M
+  log: true
+  colors: true
+modules:
+  config:
+    REST:
+      timeout: 300 # or 90000 the same result
+    PhpBrowser:
+      url: http://localhost:8080/index-test.php
+      curl:
+        CURLOPT_TIMEOUT: 300 # in Seconds
+    Yii2:
+      transaction: false
+      cleanup: false
+      entryScript: index-test.php
+      configFile: 'vendor/hiqdev/composer-config-plugin-output/tests-web.php'

@@ -1,0 +1,48 @@
+{
+  "name": "rvkulikov/amo-module",
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.2.0",
+    "ext-json": "*",
+    "yiisoft/yii2": "~2.0.28",
+    "hiqdev/composer-config-plugin": "~0.3"
+  },
+  "require-dev": {
+    "yiisoft/yii2-debug": "~2.1.0",
+    "yiisoft/yii2-gii": "~2.1.0",
+    "yiisoft/yii2-faker": "~2.0.0",
+    "codeception/base": "^2.4.0",
+    "phpunit/phpunit": "~6.5.5",
+    "codeception/verify": "~1.0.0",
+    "guzzlehttp/guzzle": ">=4.1.4 <7.0"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "rvkulikov\\amo\\module\\": "src/",
+      "rvkulikov\\amo\\module\\tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "config-plugin": {
+      "params": [
+        "config/params.php",
+        "?config/params-local.php"
+      ],
+      "common": "config/common.php",
+      "console": [
+        "$common",
+        "config/console.php"
+      ],
+      "web": [
+        "$common",
+        "config/web.php"
+      ]
+    }
+  }
+}
