@@ -7,9 +7,10 @@ use yii\db\ActiveRecord;
 
 /**
  * @property int    $id                 [bigint]
+ * @property string $subdomain          [varchar(255)]
  * @property string $integration_id     [varchar(255)]
  * @property string $secret_key         [varchar(255)]
- * @property string $authorization_code [varchar(255)]
+ * @property string $redirect_uri       [varchar(255)]
  * @property string $access_token       [varchar(255)]
  * @property string $refresh_token      [varchar(255)]
  */
@@ -29,7 +30,7 @@ class Account extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%account}}';
+        return '{{%amo__account}}';
     }
 
     /**
@@ -38,9 +39,11 @@ class Account extends ActiveRecord
     public function rules()
     {
         return [
+            ['subdomain', 'safe'],
             ['integration_id', 'safe'],
             ['secret_key', 'safe'],
             ['authorization_code', 'safe'],
+            ['redirect_uri', 'safe'],
             ['access_token', 'safe'],
             ['refresh_token', 'safe'],
         ];
