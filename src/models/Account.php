@@ -3,16 +3,14 @@ namespace rvkulikov\amo\module\models;
 
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * @property int    $id                 [bigint]
- * @property string $subdomain          [varchar(255)]
- * @property string $integration_id     [varchar(255)]
- * @property string $secret_key         [varchar(255)]
- * @property string $redirect_uri       [varchar(255)]
- * @property string $access_token       [varchar(255)]
- * @property string $refresh_token      [varchar(255)]
+ * @property int              $id        [bigint]
+ * @property string           $subdomain [varchar(255)]
+ *
+ * @property-read Credentials $credentials
  */
 class Account extends ActiveRecord
 {
@@ -39,13 +37,21 @@ class Account extends ActiveRecord
     public function rules()
     {
         return [
-            ['subdomain', 'safe'],
-            ['integration_id', 'safe'],
-            ['secret_key', 'safe'],
-            ['authorization_code', 'safe'],
-            ['redirect_uri', 'safe'],
-            ['access_token', 'safe'],
-            ['refresh_token', 'safe'],
+            ['id', 'integer'],
+            ['id', 'unique'],
+            ['id', 'required'],
+
+            ['subdomain', 'string'],
+            ['subdomain', 'unique'],
+            ['subdomain', 'required'],
         ];
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getCredentials()
+    {
+        return $this->hasOne(Credentials::class, ['account_id' => 'id'])->inverseOf('account');
     }
 }

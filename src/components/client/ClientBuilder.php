@@ -5,6 +5,7 @@ use Closure;
 use rvkulikov\amo\module\exceptions\InvalidModelException;
 use rvkulikov\amo\module\helpers\ModelHelper;
 use rvkulikov\amo\module\models\Account;
+use rvkulikov\amo\module\models\Credentials;
 use yii\httpclient\CurlTransport;
 
 /**
@@ -13,7 +14,7 @@ use yii\httpclient\CurlTransport;
 class ClientBuilder
 {
     /**
-     * @param ClientBuilder_Cfg|Account|array $cfg
+     * @param ClientBuilder_Cfg|Credentials|Account|array $cfg
      *
      * @return Client
      */
@@ -23,21 +24,30 @@ class ClientBuilder
     }
 
     /**
-     * @param ClientBuilder_Cfg|Account|array $cfg
+     * @param ClientBuilder_Cfg|Credentials|Account|array $cfg
      *
      * @return Closure
      */
     public static function lazy($cfg)
     {
         return function () use ($cfg) {
-            if ($cfg instanceof Account) {
+            if ($cfg instanceof Credentials) {
                 $cfg = new ClientBuilder_Cfg([
-                    'subdomain'     => $cfg->subdomain,
+                    'subdomain'     => $cfg->account_subdomain,
                     'access_token'  => $cfg->access_token,
                     'refresh_token' => $cfg->refresh_token,
                 ]);
             }
 
+            if ($cfg instanceof Account) {
+                $cfg = new ClientBuilder_Cfg([
+                    'subdomain'     => $cfg->credentials->account_subdomain,
+                    'access_token'  => $cfg->credentials->access_token,
+                    'refresh_token' => $cfg->credentials->refresh_token,
+                ]);
+            }
+
+            /** @var ClientBuilder_Cfg $cfg */
             $cfg = ModelHelper::ensure($cfg, ClientBuilder_Cfg::class);
             if (!$cfg->validate()) {
                 throw new InvalidModelException($cfg);

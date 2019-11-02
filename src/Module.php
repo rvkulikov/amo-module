@@ -1,20 +1,21 @@
 <?php
 namespace rvkulikov\amo\module;
 
+use rvkulikov\amo\module\commands\MigrateController;
 use Yii;
 use yii\base\Application;
 use yii\base\BootstrapInterface;
 use yii\base\InvalidConfigException;
 use yii\console\Application as CliApplication;
 use yii\console\controllers\FixtureController;
-use yii\console\controllers\MigrateController;
 use yii\helpers\ArrayHelper;
+use yii\rbac\ManagerInterface;
 use yii\rest\UrlRule;
 use yii\web\Application as WebApplication;
 use yii\web\GroupUrlRule;
 
 /**
- *
+ * @property-read ManagerInterface $authManager
  */
 class Module extends \yii\base\Module implements BootstrapInterface
 {

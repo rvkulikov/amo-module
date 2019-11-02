@@ -13,9 +13,15 @@ return [
     ],
     'container'  => [
         'definitions' => [
-            'yii\test\InitDbFixture' => [
+            'yii\test\InitDbFixture'                       => [
                 'class' => 'yii\test\InitDbFixture',
                 'db'    => $params['rvkulikov.amo.db.name'],
+            ],
+            'rvkulikov\amo\module\commands\InitController' => [
+                'class'         => 'rvkulikov\amo\module\commands\InitController',
+                'integrationId' => $params['rvkulikov.amo.tests.account.integration_id'],
+                'secretKey'     => $params['rvkulikov.amo.tests.account.secret_key'],
+                'redirectUri'   => $params['rvkulikov.amo.tests.account.redirect_uri'],
             ],
         ],
     ],

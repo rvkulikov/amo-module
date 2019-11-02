@@ -3,9 +3,9 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%amo__account}}`.
+ * Class m191027_170036_init_extensions
  */
-class m191019_193326_create_amo__account_table extends Migration
+class m191018_170036_init_extensions extends Migration
 {
     /**
      * {@inheritdoc}
@@ -14,14 +14,7 @@ class m191019_193326_create_amo__account_table extends Migration
     {
         $this->db->quoteTableName("amo__account");
         $sql = <<<SQL
-create table amo__account
-(
-	id bigint not null
-		constraint amo__account___pk
-			primary key,
-	subdomain varchar(255) not null
-        constraint amo__account___uk_1 unique
-);
+create extension if not exists "uuid-ossp";
 SQL;
 
         foreach (explode("--", $sql) as $statement) {
