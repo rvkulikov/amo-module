@@ -12,7 +12,6 @@ class m191019_193326_create_amo__account_table extends Migration
      */
     public function safeUp()
     {
-        $this->db->quoteTableName("amo__account");
         $sql = <<<SQL
 create table amo__account
 (

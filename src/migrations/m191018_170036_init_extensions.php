@@ -21,12 +21,4 @@ SQL;
             $this->execute($statement);
         }
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function safeDown()
-    {
-        $this->dropTable('amo__account');
-    }
 }

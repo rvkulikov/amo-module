@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="api/migrate-app" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/tests/yii" scriptParameters="api/migrate-app -i=0">
+    <method v="2" />
+  </configuration>
+</component>

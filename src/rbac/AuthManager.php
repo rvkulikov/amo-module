@@ -1,92 +1,23 @@
 <?php
-/**
- * RBAC implementation for HiPanel
- *
- * @link      https://github.com/hiqdev/hipanel-rbac
- * @package   hipanel-rbac
- * @license   BSD-3-Clause
- * @copyright Copyright (c) 2016-2019, HiQDev (http://hiqdev.com/)
- */
 
-namespace hipanel\rbac;
+namespace rvkulikov\amo\module\rbac;
 
-use hiqdev\yii\compat\yii;
-use yii\base\Configurable;
-use yii\rbac\RuleFactory;
+use yii\rbac\DbManager;
 
 /**
- * HiPanel AuthManager.
  *
- * @author Andrii Vasyliev <sol@hiqdev.com>
  */
-class AuthManager extends \yii\rbac\PhpManager implements Configurable
+class AuthManager extends DbManager
 {
-    use SetterTrait;
-
-    public $itemFile = '@hipanel/rbac/files/items.php';
-    public $ruleFile = '@hipanel/rbac/files/rules.php';
-    public $assignmentFile = '@hipanel/rbac/files/assignments.php';
-
-    public function __construct(array $config = [])
-    {
-        if (yii::is2()) {
-            parent::__construct($config);
-            parent::init();
-        } else {
-            $dir = __DIR__ . '/files';
-            parent::__construct($dir, new RuleFactory());
-        }
-    }
-
     /**
-     * Does real assignments saving.
-     * The idea is to split persistent assignments from session only.
+     * {@inheritDoc}
      */
-    public function persistAssignments()
-    {
-        parent::saveAssignments();
-    }
-
     public function checkAccess($userId, $permission, $params = [])
     {
-        if (empty($this->getAssignments($userId))) {
-            $this->applyUserAssignments($userId);
-        }
+        $allow = $permission;
+        $deny = "deny:{$permission}";
 
-        return parent::checkAccess($userId, $permission, $params)
-            && !parent::checkAccess($userId, "deny:$permission", $params);
-    }
-
-    public function applyUserAssignments($userId)
-    {
-        $roles = '';
-
-        if (isset(yii::getApp()->user)) {
-            $user = yii::getApp()->user->identity;
-            if ((!$user || $user->id !== $userId) && $userId) {
-                $user = call_user_func([yii::getApp()->user->identityClass, 'findIdentity'], $userId);
-            }
-            if (isset($user->roles)) {
-                $roles = $user->roles;
-            }
-        }
-
-        if (empty($userId)) {
-            $userId = '';
-            $roles  = 'role:unauthorized';
-        }
-
-        if ($roles) {
-            $this->setAssignments($roles, $userId);
-        }
-    }
-
-    /**
-     * We don't keep all the assignments, only persistent.
-     *
-     * @see persistAssignments
-     */
-    protected function saveAssignments()
-    {
+        return parent::checkAccess($userId, $allow, $params)
+            && !parent::checkAccess($userId, $deny, $params);
     }
 }

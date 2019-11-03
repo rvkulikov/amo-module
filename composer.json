@@ -6,7 +6,8 @@
     "ext-json": "*",
     "yiisoft/yii2": "~2.0.28",
     "yiisoft/yii2-httpclient": "~2",
-    "hiqdev/composer-config-plugin": "~0.3"
+    "hiqdev/composer-config-plugin": "~0.3",
+    "yii2mod/yii2-rbac": "~2"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.1.0",

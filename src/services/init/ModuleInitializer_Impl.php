@@ -1,6 +1,10 @@
 <?php
+
 namespace rvkulikov\amo\module\services\init;
 
+use DateTime;
+use rvkulikov\amo\module\exceptions\InvalidModelException;
+use rvkulikov\amo\module\models\App_OauthState;
 use rvkulikov\amo\module\models\App_User;
 use rvkulikov\amo\module\models\Integration;
 use yii\base\Component;
@@ -30,7 +34,7 @@ class ModuleInitializer_Impl extends Component implements ModuleInitializer_Inte
         parent::__construct($config);
 
         $this->authManager = Instance::ensure($this->authManager, ManagerInterface::class);
-        $this->security    = Instance::ensure($this->security, Security::class);
+        $this->security = Instance::ensure($this->security, Security::class);
     }
 
     /**
@@ -44,27 +48,49 @@ class ModuleInitializer_Impl extends Component implements ModuleInitializer_Inte
     {
         $res = new ModuleInitializer_Res();
 
-        $user = $res->user = App_User::findOne(['username' => $cfg->username]) ?? new App_User(['username' => $cfg->username]);
+        $user = App_User::findOne(['username' => $cfg->username]);
+        $user = $res->user = $user ?? new App_User(['username' => $cfg->username]);
 
-        $user->email    = $cfg->userEmail;
-        $user->status   = $cfg->userStatus;
+        $user->email = $cfg->userEmail;
+        $user->status = App_User::STATUS_ACTIVE;
         $user->password = $res->password = $this->security->generateRandomString(64);
         $user->auth_key = $res->authKey = $this->security->generateRandomString(64);
 
-        $user->save();
+        if (!$user->save()) {
+            throw new InvalidModelException($user);
+        }
 
-        $role = $res->role = new Role(['name' => 'role:admin']);
+        $role = $res->role = new Role(['name' => 'role:amo:admin']);
         $this->authManager->revokeAll($user->id);
         $this->authManager->assign($role, $user->id);
 
-        $integration = $res->integration = Integration::findOne(['id' => $cfg->integrationId]) ?? new Integration(['id' => $cfg->integrationId]);
+        $integration = Integration::findOne(['id' => $cfg->integrationId]);
+        $integration = $res->integration = $integration ?? new Integration(['id' => $cfg->integrationId]);
 
-        $integration->secret_key   = $cfg->integrationSecretKey;
+        $integration->secret_key = $cfg->integrationSecretKey;
         $integration->redirect_uri = $cfg->integrationRedirectUri;
 
-        $integration->save();
+        if (!$integration->save()) {
+            throw new InvalidModelException($integration);
+        }
 
-        $res->oauthGrantUrl = "https://www.amocrm.ru/oauth/?client_id={$integration->id}&integration_id={$integration->id}&access-token={$user->auth_key}";
+        $state = $res->state = new App_OauthState([
+            'user_id' => $user->id,
+            'integration_id' => $integration->id,
+            'token' => $this->security->generateRandomString(64),
+            'expires_at' => (new DateTime('now'))->modify('+20 minutes')->format(DATE_RFC3339)
+        ]);
+        if (!$state->save()) {
+            throw new InvalidModelException($state);
+        }
+
+        $url = "https://www.amocrm.ru/oauth/";
+        $query = http_build_query([
+            'client_id' => $integration->id,
+            'state' => $state->token,
+        ]);
+
+        $res->oauthGrantUrl = "{$url}?{$query}";
 
         return $res;
     }

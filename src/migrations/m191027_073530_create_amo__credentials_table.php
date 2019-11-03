@@ -34,7 +34,7 @@ create table amo__credentials
 	expires_in integer,
 	expires_at timestamp,
 	access_token text,
-	refresh_token varchar(255) not null
+	refresh_token text not null
 );
 SQL;
 

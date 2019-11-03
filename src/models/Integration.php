@@ -35,8 +35,8 @@ class Integration extends ActiveRecord
     public function rules()
     {
         return [
-            ['integration_id', 'string'],
-            ['integration_id', 'required'],
+            ['id', 'string'],
+            ['id', 'required'],
 
             ['secret_key', 'string'],
             ['secret_key', 'required'],

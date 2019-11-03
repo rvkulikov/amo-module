@@ -1,6 +1,7 @@
 <?php
 namespace rvkulikov\amo\module\services\init;
 
+use rvkulikov\amo\module\models\App_OauthState;
 use rvkulikov\amo\module\models\App_User;
 use rvkulikov\amo\module\models\Integration;
 use yii\base\BaseObject;
@@ -22,7 +23,10 @@ class ModuleInitializer_Res extends BaseObject
 
     /** @var Integration */
     public $integration;
+    /** @var App_OauthState */
+    public $state;
 
     /** @var string */
     public $oauthGrantUrl;
+
 }

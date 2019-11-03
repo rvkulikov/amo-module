@@ -1,7 +1,9 @@
 <?php
+
 namespace rvkulikov\amo\module;
 
-use rvkulikov\amo\module\commands\MigrateController;
+use rvkulikov\amo\module\commands\MigrateAppController;
+use rvkulikov\amo\module\commands\MigrateRbacController;
 use Yii;
 use yii\base\Application;
 use yii\base\BootstrapInterface;
@@ -25,22 +27,24 @@ class Module extends \yii\base\Module implements BootstrapInterface
     public function __construct($id, $parent = null, $config = [])
     {
         /** @noinspection PhpUnusedLocalVariableInspection */
-        $isWeb  = Yii::$app instanceof WebApplication;
-        $isCli  = Yii::$app instanceof CliApplication;
-        $isTest = YII_ENV_TEST;
+        $isWeb = Yii::$app instanceof WebApplication;
+        $isCli = Yii::$app instanceof CliApplication;
 
         parent::__construct($id, $parent, ArrayHelper::merge([
             'controllerNamespace' => $isCli
                 ? __NAMESPACE__ . '\commands'
                 : __NAMESPACE__ . '\controllers',
-            'controllerMap'       => array_filter($isCli || $isTest ? [
-                'migrate' => [
-                    'class'         => MigrateController::class,
-                    'migrationPath' => __DIR__ . '/migrations',
-                    'db'            => Yii::$app->params['rvkulikov.amo.db.name'],
+            'controllerMap' => array_filter($isCli ? [
+                'migrate-app' => [
+                    'class' => MigrateAppController::class,
+                    'db' => Yii::$app->params['rvkulikov.amo.db.name'],
+                ],
+                'migrate-rbac' => [
+                    'class' => MigrateRbacController::class,
+                    'db' => Yii::$app->params['rvkulikov.amo.db.name'],
                 ],
                 'fixture' => [
-                    'class'     => FixtureController::class,
+                    'class' => FixtureController::class,
                     'namespace' => 'rvkulikov\amo\module\tests\codeception\fixtures',
                 ],
             ] : []),
@@ -57,15 +61,16 @@ class Module extends \yii\base\Module implements BootstrapInterface
         if ($app instanceof WebApplication) {
             $app->urlManager->addRules([
                 Yii::createObject([
-                    'class'      => GroupUrlRule::class,
+                    'class' => GroupUrlRule::class,
+                    'prefix' => $this->uniqueId,
                     'ruleConfig' => [
-                        'class'     => UrlRule::class,
+                        'class' => UrlRule::class,
                         'pluralize' => false,
                     ],
-                    'rules'      => [
-                        ['controller' => "{$this->uniqueId}/accounts"],
-                        ['controller' => "{$this->uniqueId}/groups"],
-                        ['controller' => "{$this->uniqueId}/users"],
+                    'rules' => [
+                        ['controller' => "accounts"],
+                        ['controller' => "groups"],
+                        ['controller' => "users"],
                     ],
                 ]),
             ], false);

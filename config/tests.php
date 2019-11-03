@@ -1,41 +1,37 @@
 <?php /** @noinspection PhpUndefinedVariableInspection */
 
-use rvkulikov\amo\module\models\User as UserModel;
+use rvkulikov\amo\module\models\App_User as UserModel;
+use yii\rbac\DbManager;
 use yii\web\User;
 
 return [
-    'id'         => 'amo-module-tests',
-    'basePath'   => dirname(__DIR__),
-    'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
-    'language'   => 'ru-RU',
-    'aliases'    => [
+    'id' => 'amo-module-tests',
+    'basePath' => dirname(__DIR__),
+    'vendorPath' => dirname(__DIR__) . '/vendor',
+    'language' => 'ru-RU',
+    'aliases' => [
         '@app' => dirname(__DIR__) . '/tests',
     ],
-    'container'  => [
-        'definitions' => [
-            'yii\test\InitDbFixture'                       => [
-                'class' => 'yii\test\InitDbFixture',
-                'db'    => $params['rvkulikov.amo.db.name'],
-            ],
-            'rvkulikov\amo\module\commands\InitController' => [
-                'class'         => 'rvkulikov\amo\module\commands\InitController',
-                'integrationId' => $params['rvkulikov.amo.tests.account.integration_id'],
-                'secretKey'     => $params['rvkulikov.amo.tests.account.secret_key'],
-                'redirectUri'   => $params['rvkulikov.amo.tests.account.redirect_uri'],
-            ],
-        ],
-    ],
     'components' => [
-        'user'                           => [
-            'class'         => User::class,
+        'user' => [
+            'class' => User::class,
             'identityClass' => UserModel::class,
         ],
+        'authManager' => [
+            'class' => DbManager::class,
+            'db' => $params['rvkulikov.amo.db.name'],
+            'cacheKey' => 'rvkulikov-amo-rbac',
+            'itemTable' => 'rbac__auth_item',
+            'ruleTable' => 'rbac__auth_rule',
+            'itemChildTable' => 'rbac__auth_item_child',
+            'assignmentTable' => 'rbac__auth_assignment',
+        ],
         $params['rvkulikov.amo.db.name'] => [
-            'class'    => '\yii\db\Connection',
-            'dsn'      => $params['rvkulikov.amo.tests.db.dsn'],
+            'class' => '\yii\db\Connection',
+            'dsn' => $params['rvkulikov.amo.tests.db.dsn'],
             'username' => $params['rvkulikov.amo.tests.db.username'],
             'password' => $params['rvkulikov.amo.tests.db.password'],
         ],
     ],
-    'params'     => $params,
+    'params' => $params,
 ];

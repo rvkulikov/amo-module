@@ -1,30 +1,35 @@
 <?php
+
 namespace rvkulikov\amo\module\models;
 
+use DateTime;
+use rvkulikov\amo\module\components\auth\OauthStateAccess;
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\base\Security;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\di\Instance;
 use yii\web\IdentityInterface;
 
 /**
- * @property int          $id                   [bigint]
- * @property string       $username             [varchar(255)]
- * @property string       $email                [varchar(255)]
- * @property string       $auth_key             [varchar(64)]
- * @property string       $password_hash        [varchar(255)]
- * @property string       $password_reset_token [varchar(255)]
- * @property string       $verification_token   [varchar(255)]
- * @property int          $status               [smallint]
- * @property int          $created_at           [timestamp(0)]
- * @property int          $updated_at           [timestamp(0)]
+ * @property int $id                   [bigint]
+ * @property string $username             [varchar(255)]
+ * @property string $email                [varchar(255)]
+ * @property string $auth_key             [varchar(64)]
+ * @property string $password_hash        [varchar(255)]
+ * @property string $password_reset_token [varchar(255)]
+ * @property string $verification_token   [varchar(255)]
+ * @property int $status               [smallint]
+ * @property int $created_at           [timestamp(0)]
+ * @property int $updated_at           [timestamp(0)]
  *
  * @property-write string $password
  * @property-read  string $authKey
+ * @property-read  App_OauthState $oauthStates
  */
 class App_User extends ActiveRecord implements IdentityInterface
 {
@@ -60,7 +65,7 @@ class App_User extends ActiveRecord implements IdentityInterface
     public static function findIdentity($id)
     {
         return static::findOne([
-            'id'     => $id,
+            'id' => $id,
             'status' => self::STATUS_ACTIVE,
         ]);
     }
@@ -70,10 +75,26 @@ class App_User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::findOne([
-            'auth_key' => $token,
-            'status'   => self::STATUS_ACTIVE,
-        ]);
+        if ($type === OauthStateAccess::class) {
+            $query = static::find();
+            $query->alias('u');
+            $query->joinWith(['oauthStates s'], false);
+            $query->where([
+                'and',
+                ['>', 's.expires_at', (new DateTime())->format('Y-m-d H:i:s')],
+                ['s.token' => $token],
+                ['u.status' => self::STATUS_ACTIVE]
+            ]);
+
+            YII_DEBUG && $sql = $query->createCommand()->rawSql;
+
+            return $query->one();
+        } else {
+            return static::findOne([
+                'auth_key' => $token,
+                'status' => self::STATUS_ACTIVE,
+            ]);
+        }
     }
 
     /**
@@ -87,7 +108,7 @@ class App_User extends ActiveRecord implements IdentityInterface
     {
         return static::findOne([
             'username' => $username,
-            'status'   => self::STATUS_ACTIVE,
+            'status' => self::STATUS_ACTIVE,
         ]);
     }
 
@@ -106,7 +127,7 @@ class App_User extends ActiveRecord implements IdentityInterface
 
         return static::findOne([
             'password_reset_token' => $token,
-            'status'               => self::STATUS_ACTIVE,
+            'status' => self::STATUS_ACTIVE,
         ]);
     }
 
@@ -124,7 +145,7 @@ class App_User extends ActiveRecord implements IdentityInterface
         }
 
         $timestamp = (int)substr($token, strrpos($token, '_') + 1);
-        $expire    = Yii::$app->params['user.passwordResetTokenExpire']; // todo params.php
+        $expire = Yii::$app->params['user.passwordResetTokenExpire']; // todo params.php
         return $timestamp + $expire >= time();
     }
 
@@ -139,7 +160,7 @@ class App_User extends ActiveRecord implements IdentityInterface
     {
         return static::findOne([
             'verification_token' => $token,
-            'status'             => self::STATUS_INACTIVE,
+            'status' => self::STATUS_INACTIVE,
         ]);
     }
 
@@ -150,10 +171,10 @@ class App_User extends ActiveRecord implements IdentityInterface
     {
         return [
             'timestamp' => [
-                'class'              => TimestampBehavior::class,
+                'class' => TimestampBehavior::class,
                 'createdAtAttribute' => 'created_at',
                 'updatedAtAttribute' => 'updated_at',
-                'value'              => new Expression('NOW()'),
+                'value' => new Expression('NOW()'),
             ],
         ];
     }
@@ -191,6 +212,14 @@ class App_User extends ActiveRecord implements IdentityInterface
     public function getAuthKey()
     {
         return $this->auth_key;
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getOauthStates()
+    {
+        return $this->hasMany(App_OauthState::class, ['user_id' => 'id'])->inverseOf('user');
     }
 
     /**

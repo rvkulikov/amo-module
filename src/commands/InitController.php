@@ -1,9 +1,10 @@
 <?php
+
 namespace rvkulikov\amo\module\commands;
 
-use rvkulikov\amo\module\models\App_User;
 use rvkulikov\amo\module\services\init\ModuleInitializer_Cfg;
 use rvkulikov\amo\module\services\init\ModuleInitializer_Interface;
+use yii\helpers\Console;
 
 /**
  *
@@ -11,13 +12,13 @@ use rvkulikov\amo\module\services\init\ModuleInitializer_Interface;
 class InitController extends BaseCliController
 {
     /**
-     * @var string Integration redirect uri
-     */
-    public $redirectUri;
-    /**
      * @var string Integration secret key from "keys" tab
      */
     public $secretKey;
+    /**
+     * @var string Integration redirect uri
+     */
+    public $redirectUri;
     /**
      * @var string Integration id from "keys" tab
      */
@@ -35,43 +36,19 @@ class InitController extends BaseCliController
         $this->moduleInitializer = $moduleInitializer;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function options($actionID)
-    {
-        // $actionId might be used in subclasses to provide options specific to action id
-        return array_merge(parent::options($actionID), [
-            'redirectUri',
-            'secretKey',
-            'integrationId',
-        ]);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function optionAliases()
-    {
-        return array_merge(parent::optionAliases(), [
-            'ru' => 'redirectUri',
-            'sc' => 'secretKey',
-            'ii' => 'integrationId',
-            '',
-        ]);
-    }
-
     public function actionIndex()
     {
         $cfg = new ModuleInitializer_Cfg([
-            'username'               => $this->prompt('Enter admin username', ['default' => 'admin']),
-            'userEmail'              => $this->prompt('Enter admin email', ['required' => true]),
-            'userStatus'             => $this->select("Enter admin status", ['active' => App_User::STATUS_ACTIVE, 'inactive' => App_User::STATUS_INACTIVE]),
-            'integrationId'          => $this->prompt('Enter integration id', ['required' => true]),
-            'integrationSecretKey'   => $this->prompt('Enter integration secret key', ['required' => true]),
-            'integrationRedirectUri' => $this->prompt('Enter integration redirect uri', ['required' => true]),
+            'username' => $this->prompt('Enter admin username', ['default' => 'admin']),
+            'userEmail' => $this->prompt('Enter admin email', ['default' => 'admin@amo.module.loc']),
+            'integrationRedirectUri' => $this->prompt('Enter integration redirect uri',
+                ['default' => $this->redirectUri]),
+            'integrationSecretKey' => $this->prompt('Enter integration secret key', ['default' => $this->secretKey]),
+            'integrationId' => $this->prompt('Enter integration id', ['default' => $this->integrationId]),
         ]);
 
         $res = $this->moduleInitializer->initialize($cfg);
+
+        Console::output($res->oauthGrantUrl);
     }
 }
