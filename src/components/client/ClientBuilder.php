@@ -1,4 +1,5 @@
 <?php
+
 namespace rvkulikov\amo\module\components\client;
 
 use Closure;
@@ -33,16 +34,16 @@ class ClientBuilder
         return function () use ($cfg) {
             if ($cfg instanceof Credentials) {
                 $cfg = new ClientBuilder_Cfg([
-                    'subdomain'     => $cfg->account_subdomain,
-                    'access_token'  => $cfg->access_token,
+                    'subdomain' => $cfg->account_subdomain,
+                    'access_token' => $cfg->access_token,
                     'refresh_token' => $cfg->refresh_token,
                 ]);
             }
 
             if ($cfg instanceof Account) {
                 $cfg = new ClientBuilder_Cfg([
-                    'subdomain'     => $cfg->credentials->account_subdomain,
-                    'access_token'  => $cfg->credentials->access_token,
+                    'subdomain' => $cfg->credentials->account_subdomain,
+                    'access_token' => $cfg->credentials->access_token,
                     'refresh_token' => $cfg->credentials->refresh_token,
                 ]);
             }
@@ -54,10 +55,10 @@ class ClientBuilder
             }
 
             return new Client([
-                'baseUrl'       => "https://{$cfg->subdomain}.amocrm.ru/api/v2",
-                'accessToken'   => $cfg->access_token,
-                'refreshToken'  => $cfg->refresh_token,
-                'transport'     => CurlTransport::class,
+                'subdomain' => $cfg->subdomain,
+                'accessToken' => $cfg->access_token,
+                'refreshToken' => $cfg->refresh_token,
+                'transport' => CurlTransport::class,
                 'requestConfig' => ['class' => Request::class],
                 // todo on before- afterRequest, log behavior
             ]);
