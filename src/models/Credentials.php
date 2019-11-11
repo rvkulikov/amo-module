@@ -1,27 +1,31 @@
 <?php
+
 namespace rvkulikov\amo\module\models;
 
 use DateTime;
 use Exception;
+use rvkulikov\amo\module\components\client\Client;
+use rvkulikov\amo\module\components\client\ClientBuilder;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * @property int          $id                [bigint]
- * @property int          $account_id        [bigint]
- * @property int          $account_subdomain [varchar(255)]
- * @property string       $integration_id    [varchar(255)]
- * @property string       $secret_key        [varchar(255)]
- * @property string       $redirect_uri      [varchar(255)]
- * @property string       $token_type        [varchar(255)]
- * @property string       $expires_in        [integer]
- * @property int          $expires_at        [timestamp]
- * @property string       $access_token
- * @property string       $refresh_token     [varchar(255)]
+ * @property int $id                [bigint]
+ * @property int $account_id        [bigint]
+ * @property int $account_subdomain [varchar(255)]
+ * @property string $integration_id    [varchar(255)]
+ * @property string $secret_key        [varchar(255)]
+ * @property string $redirect_uri      [varchar(255)]
+ * @property string $token_type        [varchar(255)]
+ * @property string $expires_in        [integer]
+ * @property int $expires_at        [timestamp]
+ * @property string $access_token
+ * @property string $refresh_token     [varchar(255)]
  *
- * @property-write int    $expiresIn
+ * @property-write int $expiresIn
+ * @property-read Client $client
  * @property-read Account $account
  */
 class Credentials extends ActiveRecord
@@ -98,5 +102,13 @@ class Credentials extends ActiveRecord
     public function getAccount()
     {
         return $this->hasOne(Account::class, ['id' => 'account_id'])->inverseOf('credentials');
+    }
+
+    /**
+     * @return Client
+     */
+    public function getClient()
+    {
+        return ClientBuilder::build($this);
     }
 }

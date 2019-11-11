@@ -1,5 +1,20 @@
 <?php /** @noinspection PhpUndefinedVariableInspection, PhpUnusedAliasInspection */
 
+use rvkulikov\amo\module\services\account\sync\AccountSyncer_Impl;
+use rvkulikov\amo\module\services\account\sync\AccountSyncer_Interface;
+use rvkulikov\amo\module\services\customField\sync\CustomFieldsSyncer_Impl;
+use rvkulikov\amo\module\services\customField\sync\CustomFieldSyncer_Interface;
+use rvkulikov\amo\module\services\init\ModuleInitializer_Impl;
+use rvkulikov\amo\module\services\init\ModuleInitializer_Interface;
+use rvkulikov\amo\module\services\noteType\sync\NoteTypeSyncer_Impl;
+use rvkulikov\amo\module\services\noteType\sync\NoteTypeSyncer_Interface;
+use rvkulikov\amo\module\services\pipeline\sync\PipelineSyncer_Impl;
+use rvkulikov\amo\module\services\pipeline\sync\PipelineSyncer_Interface;
+use rvkulikov\amo\module\services\taskType\sync\TaskTypeSyncer_Impl;
+use rvkulikov\amo\module\services\taskType\sync\TaskTypeSyncer_Interface;
+use rvkulikov\amo\module\services\user\sync\UserSyncer_Impl;
+use rvkulikov\amo\module\services\user\sync\UserSyncer_Interface;
+
 return [
     'aliases'    => [
         '@rvkulikov/amo/module'       => dirname(__DIR__) . '/src',
@@ -7,11 +22,17 @@ return [
     ],
     'container'  => [
         'definitions' => [
-            'rvkulikov\amo\module\services\init\ModuleInitializer_Interface' => [
-                'class'       => 'rvkulikov\amo\module\services\init\ModuleInitializer_Impl',
+            ModuleInitializer_Interface::class => [
+                'class' => ModuleInitializer_Impl::class,
                 'authManager' => $params['rvkulikov.amo.auth_manager.name'],
                 'security'    => 'security',
             ],
+            AccountSyncer_Interface::class => AccountSyncer_Impl::class,
+            UserSyncer_Interface::class => UserSyncer_Impl::class,
+            CustomFieldSyncer_Interface::class => CustomFieldsSyncer_Impl::class,
+            PipelineSyncer_Interface::class => PipelineSyncer_Impl::class,
+            NoteTypeSyncer_Interface::class => NoteTypeSyncer_Impl::class,
+            TaskTypeSyncer_Interface::class => TaskTypeSyncer_Impl::class,
         ],
     ],
     'bootstrap'  => [

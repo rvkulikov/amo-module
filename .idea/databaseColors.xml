@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DatabaseColorSettings">
+    <colors>
+      <entry key="amo__account/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Blue" />
+      <entry key="amo__credentials/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Blue" />
+      <entry key="amo__group/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Blue" />
+      <entry key="amo__integration/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Blue" />
+      <entry key="amo__pipeline/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Blue" />
+      <entry key="amo__status/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Blue" />
+      <entry key="amo__user/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Blue" />
+      <entry key="amo__user_account/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Blue" />
+      <entry key="amo__user_account_rights/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Blue" />
+      <entry key="amo__user_group/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Blue" />
+      <entry key="amo__user_status_rights/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Blue" />
+      <entry key="app__migration/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Violet" />
+      <entry key="app__oauth_state/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Violet" />
+      <entry key="app__user/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Violet" />
+      <entry key="rbac__auth_assignment/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Yellow" />
+      <entry key="rbac__auth_item/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Yellow" />
+      <entry key="rbac__auth_item_child/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Yellow" />
+      <entry key="rbac__auth_rule/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Yellow" />
+      <entry key="rbac__migration/public/rvkulikov__amo-server-test/ba72d035-b72c-4baf-99f3-5d44c99173db:TABLE" value="Yellow" />
+    </colors>
+  </component>
+</project>

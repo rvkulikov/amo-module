@@ -1,15 +1,25 @@
 <?php
 namespace rvkulikov\amo\module\models;
 
+use rvkulikov\amo\module\components\client\Client;
+use rvkulikov\amo\module\components\client\ClientBuilder;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * @property int              $id        [bigint]
- * @property string           $subdomain [varchar(255)]
+ * @property int $id [bigint]
+ * @property string $name [varchar(255)]
+ * @property string $subdomain [varchar(255)]
+ * @property string $currency [varchar(255)]
+ * @property string $timezone [varchar(255)]
+ * @property string $timezone_offset [varchar(255)]
+ * @property string $language [varchar(255)]
+ * @property string $date_pattern [jsonb]
+ * @property int $current_user [bigint]
  *
+ * @property-read Client $client
  * @property-read Credentials $credentials
  */
 class Account extends ActiveRecord
@@ -44,6 +54,20 @@ class Account extends ActiveRecord
             ['subdomain', 'string'],
             ['subdomain', 'unique'],
             ['subdomain', 'required'],
+
+            ['name', 'string'],
+
+            ['currency', 'string'],
+
+            ['timezone', 'string'],
+
+            ['timezone_offset', 'string'],
+
+            ['language', 'string'],
+
+            ['date_pattern', 'safe'],
+
+            ['current_user', 'integer']
         ];
     }
 
@@ -53,5 +77,13 @@ class Account extends ActiveRecord
     public function getCredentials()
     {
         return $this->hasOne(Credentials::class, ['account_id' => 'id'])->inverseOf('account');
+    }
+
+    /**
+     * @return Client
+     */
+    public function getClient()
+    {
+        return ClientBuilder::build($this);
     }
 }

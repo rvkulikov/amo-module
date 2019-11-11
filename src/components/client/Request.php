@@ -28,10 +28,11 @@ class Request extends \yii\httpclient\Request
         $this->addHeaders(['Authorization' => "Bearer {$this->client->accessToken}"]);
         $response = parent::send();
 
-        if (!$response->isOk && $response->statusCode === 401) {
+        if (!$response->isOk && $response->statusCode == 401) {
             $credentials = $this->refreshCredentials();
             $this->client->accessToken = $credentials->access_token;
 
+            $this->headers->remove('Authorization');
             $this->addHeaders(['Authorization' => "Bearer {$this->client->accessToken}"]);
             $response = parent::send();
         }
@@ -56,7 +57,7 @@ class Request extends \yii\httpclient\Request
             'transport' => CurlTransport::class
         ]);
 
-        $request = $client->post(['oauth/access_token'], [
+        $request = $client->post(['oauth2/access_token'], [
             'client_id' => $credentials->integration_id,
             'client_secret' => $credentials->secret_key,
             'grant_type' => 'refresh_token',

@@ -1,0 +1,9 @@
+{
+  "methodCalls": [
+    {
+      "class": "\\rvkulikov\\amo\\module\\helpers\\ModelHelper",
+      "method": "ensure",
+      "position": 1
+    }
+  ]
+}

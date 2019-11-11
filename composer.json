@@ -4,8 +4,11 @@
   "require": {
     "php": ">=7.2.0",
     "ext-json": "*",
+    "ext-pcntl": "*",
     "yiisoft/yii2": "~2.0.28",
     "yiisoft/yii2-httpclient": "~2",
+    "yiisoft/yii2-queue": "~2",
+    "yiisoft/yii2-redis": "~2",
     "hiqdev/composer-config-plugin": "~0.3",
     "yii2mod/yii2-rbac": "~2"
   },

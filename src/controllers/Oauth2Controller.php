@@ -22,7 +22,7 @@ use yii\web\BadRequestHttpException;
 /**
  *
  */
-class OauthController extends Controller
+class Oauth2Controller extends Controller
 {
     /**
      * {@inheritdoc}
