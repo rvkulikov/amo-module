@@ -15,13 +15,13 @@ class m191111_223110_create_amo__group_table extends Migration
         $sql = <<<SQL
 create table amo__group
 (
-    id         bigint not null
-        constraint amo__group_pk
-            primary key,
     account_id bigint not null
         constraint amo__group_amo__account_id_fk
             references amo__account
             on update cascade,
+    id         bigint not null
+        constraint amo__group_pk
+            primary key,
     name       varchar(255),
     deleted_at timestamp
 );

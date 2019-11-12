@@ -15,13 +15,13 @@ class m191111_221823_create_amo__pipeline_table extends Migration
         $sql = <<<SQL
 create table amo__pipeline
 (
-    id         bigint not null
-        constraint amo__pipeline_pk
-            primary key,
     account_id bigint not null
         constraint amo__pipeline_amo__account_id_fk
             references amo__account
             on update cascade,
+    id         bigint not null
+        constraint amo__pipeline_pk
+            primary key,
     name       varchar(255),
     sort       integer,
     is_main    boolean not null,

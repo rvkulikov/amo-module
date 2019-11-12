@@ -27,10 +27,7 @@ create table amo__user_status_rights
         constraint amo__user_status_rights_amo__pipeline_id_fk
             references amo__pipeline
             on update cascade,
-    status_id   bigint not null
-        constraint amo__user_status_rights_amo__status_id_fk
-            references amo__status
-            on update cascade,
+    status_id   bigint not null,
     view        char,
     edit        char,
     delete      char,
@@ -38,6 +35,11 @@ create table amo__user_status_rights
     constraint amo__user_status_rights_pk
         primary key (user_id, account_id, pipeline_id, status_id)
 );
+--
+alter table amo__user_status_rights
+	add constraint amo__user_status_rights_amo__status_pipeline_id_id_fk
+		foreign key (pipeline_id, status_id) references amo__status (pipeline_id, id)
+			on update cascade;
 SQL;
 
         foreach (explode("--", $sql) as $statement) {
