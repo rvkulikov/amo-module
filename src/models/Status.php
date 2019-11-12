@@ -55,11 +55,11 @@ class Status extends ActiveRecord
             ['account_id', 'exist', 'targetRelation' => 'account'],
             ['account_id', 'required'],
 
-            ['id', 'integer'],
-            ['id', 'required'],
-
             ['pipeline_id', 'exist', 'targetRelation' => 'pipeline'],
             ['pipeline_id', 'required'],
+
+            ['id', 'integer'],
+            ['id', 'required'],
 
             ['name', 'string'],
             ['color', 'string'],

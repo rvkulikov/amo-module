@@ -23,6 +23,7 @@ use yii\db\ActiveRecord;
  * @property-read Credentials $credentials
  * @property-read Pipeline[] $pipelines
  * @property-read Status[] $statuses
+ * @property-read Group[] $groups
  */
 class Account extends ActiveRecord
 {
@@ -103,5 +104,13 @@ class Account extends ActiveRecord
     public function getStatuses()
     {
         return $this->hasMany(Status::class, ['account_id' => 'id'])->inverseOf('account');
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getGroups()
+    {
+        return $this->hasMany(Group::class, ['account_id' => 'id'])->inverseOf('account');
     }
 }

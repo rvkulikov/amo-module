@@ -4,6 +4,8 @@ use rvkulikov\amo\module\services\account\sync\AccountSyncer_Impl;
 use rvkulikov\amo\module\services\account\sync\AccountSyncer_Interface;
 use rvkulikov\amo\module\services\customField\sync\CustomFieldsSyncer_Impl;
 use rvkulikov\amo\module\services\customField\sync\CustomFieldSyncer_Interface;
+use rvkulikov\amo\module\services\group\sync\GroupSyncer_Impl;
+use rvkulikov\amo\module\services\group\sync\GroupSyncer_Interface;
 use rvkulikov\amo\module\services\init\ModuleInitializer_Impl;
 use rvkulikov\amo\module\services\init\ModuleInitializer_Interface;
 use rvkulikov\amo\module\services\noteType\sync\NoteTypeSyncer_Impl;
@@ -29,6 +31,7 @@ return [
             ],
             AccountSyncer_Interface::class => AccountSyncer_Impl::class,
             UserSyncer_Interface::class => UserSyncer_Impl::class,
+            GroupSyncer_Interface::class => GroupSyncer_Impl::class,
             CustomFieldSyncer_Interface::class => CustomFieldsSyncer_Impl::class,
             PipelineSyncer_Interface::class => PipelineSyncer_Impl::class,
             NoteTypeSyncer_Interface::class => NoteTypeSyncer_Impl::class,

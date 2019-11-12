@@ -6,6 +6,7 @@ use rvkulikov\amo\module\exceptions\InvalidModelException;
 use rvkulikov\amo\module\helpers\ModelHelper;
 use rvkulikov\amo\module\models\Account;
 use rvkulikov\amo\module\services\customField\sync\CustomFieldSyncer_Interface;
+use rvkulikov\amo\module\services\group\sync\GroupSyncer_Interface;
 use rvkulikov\amo\module\services\noteType\sync\NoteTypeSyncer_Interface;
 use rvkulikov\amo\module\services\pipeline\sync\PipelineSyncer_Interface;
 use rvkulikov\amo\module\services\taskType\sync\TaskTypeSyncer_Interface;
@@ -32,6 +33,8 @@ class AccountSyncer_Impl extends Component implements AccountSyncer_Interface
 
     /** @var UserSyncer_Interface */
     private $userSyncer;
+    /** @var GroupSyncer_Interface */
+    private $groupSyncer;
     /** @var CustomFieldSyncer_Interface */
     private $customFieldSyncer;
     /** @var PipelineSyncer_Interface */
@@ -46,6 +49,7 @@ class AccountSyncer_Impl extends Component implements AccountSyncer_Interface
      */
     public function __construct(
         UserSyncer_Interface $userSyncer,
+        GroupSyncer_Interface $groupSyncer,
         CustomFieldSyncer_Interface $customFieldSyncer,
         PipelineSyncer_Interface $pipelineSyncer,
         NoteTypeSyncer_Interface $noteTypeSyncer,
@@ -54,6 +58,7 @@ class AccountSyncer_Impl extends Component implements AccountSyncer_Interface
     ) {
         parent::__construct($config);
         $this->userSyncer = $userSyncer;
+        $this->groupSyncer = $groupSyncer;
         $this->customFieldSyncer = $customFieldSyncer;
         $this->pipelineSyncer = $pipelineSyncer;
         $this->noteTypeSyncer = $noteTypeSyncer;
@@ -81,8 +86,8 @@ class AccountSyncer_Impl extends Component implements AccountSyncer_Interface
 
         $this->syncAccount($data);
         $this->syncPipelines($data);
-        $this->syncUsers($data);
-//        $this->syncGroups($data);
+        $this->syncGroups($data);
+//        $this->syncUsers($data);
 //        $this->syncCustomFields($data);
 //        $this->syncNoteTypes($data);
 //        $this->syncTaskTypes($data);
@@ -123,6 +128,19 @@ class AccountSyncer_Impl extends Component implements AccountSyncer_Interface
         $this->pipelineSyncer->sync([
             'accountId' => $this->account->id,
             'pipelines' => ArrayHelper::getValue($data, '_embedded.pipelines', []),
+        ]);
+    }
+
+    /**
+     * @param $data
+     * @throws InvalidConfigException
+     * @throws InvalidModelException
+     */
+    private function syncGroups($data)
+    {
+        $this->groupSyncer->sync([
+            'accountId' => $this->account->id,
+            'groups' => ArrayHelper::getValue($data, '_embedded.groups', [])
         ]);
     }
 

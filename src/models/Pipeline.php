@@ -39,15 +39,24 @@ class Pipeline extends ActiveRecord
     /**
      * {@inheritDoc}
      */
+    public static function primaryKey()
+    {
+        // todo composite [account_id, id]?
+        return parent::primaryKey();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function rules()
     {
         return [
+            ['account_id', 'exist', 'targetRelation' => 'account'],
+            ['account_id', 'required'],
+
             ['id', 'integer'],
             ['id', 'unique'],
             ['id', 'required'],
-
-            ['account_id', 'exist', 'targetRelation' => 'account'],
-            ['account_id', 'required'],
 
             ['name', 'string'],
             ['sort', 'integer'],

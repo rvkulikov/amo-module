@@ -4,6 +4,7 @@ namespace rvkulikov\amo\module\services\pipeline\sync;
 
 use rvkulikov\amo\module\exceptions\InvalidModelException;
 use rvkulikov\amo\module\helpers\ModelHelper;
+use rvkulikov\amo\module\helpers\ObsoleteHelper;
 use rvkulikov\amo\module\models\Account;
 use rvkulikov\amo\module\models\Pipeline;
 use rvkulikov\amo\module\models\Status;
@@ -11,7 +12,6 @@ use Throwable;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
-use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -51,6 +51,8 @@ class PipelineSyncer_Impl extends Component implements PipelineSyncer_Interface
 
     /**
      * @param mixed[] $pipelines
+     * @throws Exception
+     * @throws InvalidConfigException
      */
     private function savePipelines($pipelines)
     {
@@ -71,24 +73,13 @@ class PipelineSyncer_Impl extends Component implements PipelineSyncer_Interface
             }
         });
 
-        $pipelinePks = ArrayHelper::getColumn($pipelines, 'id');
-        $obsoletePks = Pipeline::find()->where([
-            'and',
-            ['account_id' => $this->account->id],
-            ['not in', 'id', $pipelinePks],
-            ['is not', 'deleted_at', null]
-        ])->select(['id'])->column();
-
-        // mark all pipelines which was gone since last sync
-        !empty($obsoletePks) && Pipeline::updateAll(
-            ['deleted_at' => new Expression('NOW()')],
-            ['id' => $obsoletePks]
-        );
+        ObsoleteHelper::markObsolete(Pipeline::class, $pipelines, ['account_id' => $this->account->id]);
     }
 
     /**
      * @param mixed[] $statuses
      * @throws Exception
+     * @throws InvalidConfigException
      */
     private function saveStatuses($statuses)
     {
@@ -111,23 +102,6 @@ class PipelineSyncer_Impl extends Component implements PipelineSyncer_Interface
             }
         });
 
-        $statusPks = ArrayHelper::getColumn($statuses, function ($status) {
-            return [
-                'pipeline_id' => $status['pipeline_id'],
-                'id' => $status['id']
-            ];
-        });
-        $obsoletePks = Status::find()->where([
-            'and',
-            ['account_id' => $this->account->id],
-            ['not in', ['pipeline_id', 'id'], $statusPks],
-            ['is not', 'deleted_at', null]
-        ])->select(['pipeline_id', 'id'])->createCommand()->queryAll();
-
-        // mark all statuses which was gone since last sync
-        !empty($obsoletePks) && Status::updateAll(
-            ['deleted_at' => new Expression('NOW()')],
-            ['in', ['pipeline_id', 'id'], $obsoletePks]
-        );
+        ObsoleteHelper::markObsolete(Status::class, $statuses, ['account_id' => $this->account->id]);
     }
 }
