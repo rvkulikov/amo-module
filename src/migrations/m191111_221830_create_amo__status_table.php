@@ -23,7 +23,7 @@ create table amo__status
         constraint amo__status_amo__pipeline_id_fk
             references amo__pipeline
             on update cascade,
-    id         bigint not null,
+    id          bigint  not null,
     name        varchar(255),
     color       varchar(255),
     sort        integer,
@@ -32,8 +32,8 @@ create table amo__status
 );
 --
 alter table amo__status
-	add constraint amo__status_pk
-		primary key (pipeline_id, id);
+    add constraint amo__status_pk
+        primary key (pipeline_id, id);
 SQL;
 
         foreach (explode("--", $sql) as $statement) {

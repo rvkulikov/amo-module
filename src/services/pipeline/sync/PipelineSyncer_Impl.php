@@ -1,13 +1,12 @@
 <?php
-
 namespace rvkulikov\amo\module\services\pipeline\sync;
 
 use rvkulikov\amo\module\exceptions\InvalidModelException;
 use rvkulikov\amo\module\helpers\ModelHelper;
-use rvkulikov\amo\module\helpers\ObsoleteHelper;
 use rvkulikov\amo\module\models\Account;
 use rvkulikov\amo\module\models\Pipeline;
 use rvkulikov\amo\module\models\Status;
+use rvkulikov\amo\module\services\util\safeDelete\SafeDeleter_Interface;
 use Throwable;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
@@ -23,6 +22,17 @@ class PipelineSyncer_Impl extends Component implements PipelineSyncer_Interface
     private $cfg;
     /** @var Account */
     private $account;
+    /** @var SafeDeleter_Interface */
+    private $safeDeleter;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __construct(SafeDeleter_Interface $safeDeleter, $config = [])
+    {
+        parent::__construct($config);
+        $this->safeDeleter = $safeDeleter;
+    }
 
     /**
      * @param array|PipelineSyncer_Cfg $cfg
@@ -53,6 +63,7 @@ class PipelineSyncer_Impl extends Component implements PipelineSyncer_Interface
      * @param mixed[] $pipelines
      * @throws Exception
      * @throws InvalidConfigException
+     * @throws InvalidModelException
      */
     private function savePipelines($pipelines)
     {
@@ -66,6 +77,7 @@ class PipelineSyncer_Impl extends Component implements PipelineSyncer_Interface
                 'name' => $pipeline['name'],
                 'sort' => $pipeline['sort'],
                 'is_main' => $pipeline['is_main'],
+                'deleted_at' => null,
             ], '');
 
             if (!$model->save()) {
@@ -73,13 +85,19 @@ class PipelineSyncer_Impl extends Component implements PipelineSyncer_Interface
             }
         });
 
-        ObsoleteHelper::markObsolete(Pipeline::class, $pipelines, ['account_id' => $this->account->id]);
+        $this->safeDeleter->delete([
+            'definition' => Pipeline::class,
+            'strategy' => 'soft',
+            'rows' => $pipelines,
+            'where' => ['account_id' => $this->account->id],
+        ]);
     }
 
     /**
      * @param mixed[] $statuses
      * @throws Exception
      * @throws InvalidConfigException
+     * @throws InvalidModelException
      */
     private function saveStatuses($statuses)
     {
@@ -95,6 +113,7 @@ class PipelineSyncer_Impl extends Component implements PipelineSyncer_Interface
                 'color' => $status['color'],
                 'ord' => $status['ord'],
                 'is_editable' => $status['is_editable'],
+                'deleted_at' => null,
             ], '');
 
             if (!$model->save()) {
@@ -102,6 +121,11 @@ class PipelineSyncer_Impl extends Component implements PipelineSyncer_Interface
             }
         });
 
-        ObsoleteHelper::markObsolete(Status::class, $statuses, ['account_id' => $this->account->id]);
+        $this->safeDeleter->delete([
+            'definition' => Status::class,
+            'strategy' => 'soft',
+            'rows' => $statuses,
+            'where' => ['account_id' => $this->account->id],
+        ]);
     }
 }

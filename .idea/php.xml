@@ -77,6 +77,9 @@
       <path value="$PROJECT_DIR$/vendor/yii2mod/yii2-rbac" />
       <path value="$PROJECT_DIR$/vendor/yiisoft/yii2-queue" />
       <path value="$PROJECT_DIR$/vendor/symfony/process" />
+      <path value="$PROJECT_DIR$/vendor/yiisoft/yii2-redis" />
+      <path value="$PROJECT_DIR$/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/voskobovich/yii2-linker-behavior" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

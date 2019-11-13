@@ -16,6 +16,8 @@ use rvkulikov\amo\module\services\taskType\sync\TaskTypeSyncer_Impl;
 use rvkulikov\amo\module\services\taskType\sync\TaskTypeSyncer_Interface;
 use rvkulikov\amo\module\services\user\sync\UserSyncer_Impl;
 use rvkulikov\amo\module\services\user\sync\UserSyncer_Interface;
+use rvkulikov\amo\module\services\util\safeDelete\SafeDeleter_Impl;
+use rvkulikov\amo\module\services\util\safeDelete\SafeDeleter_Interface;
 
 return [
     'aliases'    => [
@@ -36,6 +38,7 @@ return [
             PipelineSyncer_Interface::class => PipelineSyncer_Impl::class,
             NoteTypeSyncer_Interface::class => NoteTypeSyncer_Impl::class,
             TaskTypeSyncer_Interface::class => TaskTypeSyncer_Impl::class,
+            SafeDeleter_Interface::class => SafeDeleter_Impl::class,
         ],
     ],
     'bootstrap'  => [

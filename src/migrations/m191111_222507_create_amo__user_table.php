@@ -18,13 +18,10 @@ create table amo__user
     id           bigint       not null
         constraint amo__user_pk
             primary key,
+    login        varchar(255) not null,
     name         varchar(255),
     last_name    varchar(255),
-    login        varchar(255) not null,
     language     varchar(255),
-    is_active    boolean      not null,
-    is_free      boolean      not null,
-    is_admin     boolean      not null,
     phone_number varchar(255)
 );
 --

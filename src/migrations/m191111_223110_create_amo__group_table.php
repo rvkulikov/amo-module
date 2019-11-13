@@ -24,8 +24,8 @@ create table amo__group
     deleted_at timestamp
 );
 --
-alter table amo__status
-	add constraint amo__status_pk
+alter table amo__group
+	add constraint amo__group_pk
 		primary key (account_id, id);
 SQL;
 

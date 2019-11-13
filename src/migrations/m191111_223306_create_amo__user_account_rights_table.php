@@ -39,7 +39,7 @@ create table amo__user_account_rights
     company_edit   char,
     company_delete char,
     company_export char,
-    task_exit      char,
+    task_edit      char,
     task_delete    char,
     constraint amo__user_rights_pk
         primary key (user_id, account_id)
