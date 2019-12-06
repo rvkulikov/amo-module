@@ -49,9 +49,9 @@ class ModuleInitializer_Impl extends Component implements ModuleInitializer_Inte
         $res = new ModuleInitializer_Res();
 
         $user = App_User::findOne(['username' => $cfg->username]);
-        $user = $res->user = $user ?? new App_User(['username' => $cfg->username]);
+        $user = $user ?? App_User::findOne(['email' => $cfg->userEmail]);
+        $user = $res->user = $user ?? new App_User(['username' => $cfg->username, 'email' => $cfg->userEmail]);
 
-        $user->email = $cfg->userEmail;
         $user->status = App_User::STATUS_ACTIVE;
         $user->password = $res->password = $this->security->generateRandomString(64);
         $user->auth_key = $res->authKey = $this->security->generateRandomString(64);

@@ -39,12 +39,11 @@ class InitController extends BaseCliController
     public function actionIndex()
     {
         $cfg = new ModuleInitializer_Cfg([
-            'username' => $this->prompt('Enter admin username', ['default' => 'admin']),
-            'userEmail' => $this->prompt('Enter admin email', ['default' => 'admin@amo.module.loc']),
-            'integrationRedirectUri' => $this->prompt('Enter integration redirect uri',
-                ['default' => $this->redirectUri]),
-            'integrationSecretKey' => $this->prompt('Enter integration secret key', ['default' => $this->secretKey]),
-            'integrationId' => $this->prompt('Enter integration id', ['default' => $this->integrationId]),
+            'username'               => $this->prompt('Enter admin username', ['default' => 'admin']),
+            'userEmail'              => $this->prompt('Enter admin email', ['default' => 'admin@amo.module.loc']),
+            'integrationRedirectUri' => $this->prompt('Enter integration redirect uri', ['default' => $this->redirectUri]),
+            'integrationSecretKey'   => $this->prompt('Enter integration secret key', ['default' => $this->secretKey]),
+            'integrationId'          => $this->prompt('Enter integration id', ['default' => $this->integrationId]),
         ]);
 
         $res = $this->moduleInitializer->initialize($cfg);
