@@ -3,6 +3,7 @@
 namespace rvkulikov\amo\module\commands;
 
 use rvkulikov\amo\module\exceptions\InvalidModelException;
+use rvkulikov\amo\module\models\Account;
 use rvkulikov\amo\module\services\account\sync\AccountSyncer_Interface;
 use yii\base\InvalidConfigException;
 use yii\console\Controller;
@@ -26,15 +27,33 @@ class AccountsController extends Controller
     }
 
     /**
+     * @throws InvalidModelException
+     * @throws InvalidConfigException
+     * @throws Exception
+     */
+    public function actionSyncAll()
+    {
+        $ids = Account::find()->select(['id'])->column();
+        foreach ($ids as $id) {
+            $this->actionSync($id);
+        }
+    }
+
+    /**
      * @param int $id
+     *
      * @throws InvalidModelException
      * @throws InvalidConfigException
      * @throws Exception
      */
     public function actionSync(int $id)
     {
+        if (!$this->confirm("Are you sure you want to sync amo account [{$id}]")) {
+            return;
+        }
+
         $this->accountSyncer->sync([
-            'accountId' => $id
+            'accountId' => $id,
         ]);
     }
 }

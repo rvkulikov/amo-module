@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="api/accounts/sync-all" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/tests/yii" scriptParameters="api/accounts/sync-all --interactive=0">
+    <method v="2" />
+  </configuration>
+</component>
