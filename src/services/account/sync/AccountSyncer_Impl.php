@@ -1,4 +1,5 @@
 <?php
+
 namespace rvkulikov\amo\module\services\account\sync;
 
 use rvkulikov\amo\module\exceptions\InvalidModelException;
@@ -134,8 +135,8 @@ class AccountSyncer_Impl extends Component implements AccountSyncer_Interface
     {
         $this->userSyncer->sync([
             'accountId' => $this->account->id,
-            'groups' => ArrayHelper::getValue($data, '_embedded.groups', []),
-            'users' => ArrayHelper::getValue($data, '_embedded.users', []),
+            'groups'    => ArrayHelper::getValue($data, '_embedded.groups', []),
+            'users'     => ArrayHelper::getValue($data, '_embedded.users', []),
         ]);
     }
 
