@@ -1,5 +1,4 @@
 <?php
-
 namespace rvkulikov\amo\module\services\account\sync;
 
 use rvkulikov\amo\module\exceptions\InvalidModelException;
@@ -83,8 +82,8 @@ class AccountSyncer_Impl extends Component implements AccountSyncer_Interface
         $this->syncPipelines($data);
         $this->syncUsers($data);
         $this->syncCustomFields($data);
-//        $this->syncNoteTypes($data);
-//        $this->syncTaskTypes($data);
+        $this->syncNoteTypes($data);
+        $this->syncTaskTypes($data);
 
         $this->trigger(self::EVENT_AFTER_SYNC, new Event(['data' => ['account' => $data]]));
     }
@@ -150,6 +149,34 @@ class AccountSyncer_Impl extends Component implements AccountSyncer_Interface
         $this->customFieldSyncer->sync([
             'accountId'    => $this->account->id,
             'customFields' => ArrayHelper::getValue($data, '_embedded.custom_fields')
+        ]);
+    }
+
+    /**
+     * @param $data
+     * @throws InvalidConfigException
+     * @throws InvalidModelException
+     * @throws \yii\db\Exception
+     */
+    private function syncNoteTypes($data)
+    {
+        $this->noteTypeSyncer->sync([
+            'accountId' => $this->account->id,
+            'noteTypes' => ArrayHelper::getValue($data, '_embedded.note_types')
+        ]);
+    }
+
+    /**
+     * @param $data
+     * @throws InvalidConfigException
+     * @throws InvalidModelException
+     * @throws \yii\db\Exception
+     */
+    private function syncTaskTypes($data)
+    {
+        $this->taskTypeSyncer->sync([
+            'accountId' => $this->account->id,
+            'taskTypes' => ArrayHelper::getValue($data, '_embedded.task_types')
         ]);
     }
 }
