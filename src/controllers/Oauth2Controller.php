@@ -10,6 +10,9 @@ use rvkulikov\amo\module\models\Account;
 use rvkulikov\amo\module\models\App_OauthState;
 use rvkulikov\amo\module\models\Credentials;
 use rvkulikov\amo\module\models\Integration;
+use Throwable;
+use yii\base\InvalidConfigException;
+use yii\db\Expression;
 use yii\filters\AccessControl;
 use yii\filters\auth\CompositeAuth;
 use yii\helpers\ArrayHelper;
@@ -55,9 +58,10 @@ class Oauth2Controller extends Controller
      * @param string $code
      * @param $referer
      * @return Account
-     * @throws Exception
-     * @throws InvalidModelException
      * @throws BadRequestHttpException
+     * @throws Exception
+     * @throws Throwable
+     * @throws InvalidConfigException
      */
     public function actionRedirect($state, $code, $referer)
     {
@@ -80,13 +84,21 @@ class Oauth2Controller extends Controller
         $credentials->account_id = $account->id;
         $credentials->account_subdomain = $account->subdomain;
 
-        if (!$account->save()) {
-            throw new InvalidModelException($account);
-        }
+        Account::getDb()->transaction(function () use ($account, $credentials) {
+            if (!$account->save()) {
+                throw new InvalidModelException($account);
+            }
 
-        if (!$credentials->save()) {
-            throw new InvalidModelException($credentials);
-        }
+            if (!$credentials->save()) {
+                throw new InvalidModelException($credentials);
+            }
+
+            Credentials::updateAll(['deleted_at' => new Expression('NOW()')], [
+                'and',
+                ['is', 'deleted_at', null],
+                ['!=', 'id', $credentials->id]
+            ]);
+        });
 
         return $account;
     }

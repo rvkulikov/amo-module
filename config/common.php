@@ -2,7 +2,7 @@
 
 use rvkulikov\amo\module\services\account\sync\AccountSyncer_Impl;
 use rvkulikov\amo\module\services\account\sync\AccountSyncer_Interface;
-use rvkulikov\amo\module\services\customField\sync\CustomFieldsSyncer_Impl;
+use rvkulikov\amo\module\services\customField\sync\CustomFieldSyncer_Impl;
 use rvkulikov\amo\module\services\customField\sync\CustomFieldSyncer_Interface;
 use rvkulikov\amo\module\services\group\sync\GroupSyncer_Impl;
 use rvkulikov\amo\module\services\group\sync\GroupSyncer_Interface;
@@ -31,14 +31,14 @@ return [
                 'authManager' => $params['rvkulikov.amo.auth_manager.name'],
                 'security'    => 'security',
             ],
-            AccountSyncer_Interface::class => AccountSyncer_Impl::class,
-            UserSyncer_Interface::class => UserSyncer_Impl::class,
-            GroupSyncer_Interface::class => GroupSyncer_Impl::class,
-            CustomFieldSyncer_Interface::class => CustomFieldsSyncer_Impl::class,
-            PipelineSyncer_Interface::class => PipelineSyncer_Impl::class,
-            NoteTypeSyncer_Interface::class => NoteTypeSyncer_Impl::class,
-            TaskTypeSyncer_Interface::class => TaskTypeSyncer_Impl::class,
-            SafeDeleter_Interface::class => SafeDeleter_Impl::class,
+            AccountSyncer_Interface::class     => AccountSyncer_Impl::class,
+            UserSyncer_Interface::class        => UserSyncer_Impl::class,
+            GroupSyncer_Interface::class       => GroupSyncer_Impl::class,
+            CustomFieldSyncer_Interface::class => CustomFieldSyncer_Impl::class,
+            PipelineSyncer_Interface::class    => PipelineSyncer_Impl::class,
+            NoteTypeSyncer_Interface::class    => NoteTypeSyncer_Impl::class,
+            TaskTypeSyncer_Interface::class    => TaskTypeSyncer_Impl::class,
+            SafeDeleter_Interface::class       => SafeDeleter_Impl::class,
         ],
     ],
     'bootstrap'  => [

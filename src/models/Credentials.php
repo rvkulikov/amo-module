@@ -6,6 +6,7 @@ use DateTime;
 use Exception;
 use rvkulikov\amo\module\components\client\Client;
 use rvkulikov\amo\module\components\client\ClientBuilder;
+use rvkulikov\amo\module\models\query\CredentialsQuery;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
@@ -21,6 +22,7 @@ use yii\db\ActiveRecord;
  * @property string $token_type        [varchar(255)]
  * @property string $expires_in        [integer]
  * @property int $expires_at        [timestamp]
+ * @property int $deleted_at        [timestamp]
  * @property string $access_token
  * @property string $refresh_token     [varchar(255)]
  *
@@ -71,9 +73,10 @@ class Credentials extends ActiveRecord
             ['token_type', 'string'],
             ['token_type', 'required'],
 
-            ['expires_in', 'integer', 'min' => 0],
+            ['expires_in', 'integer'],
 
             ['expires_at', 'datetime', 'format' => 'php:Y-m-d H:i:s'],
+            ['deleted_at', 'datetime', 'format' => 'php:Y-m-d H:i:s'],
 
             ['access_token', 'string'],
 
@@ -110,5 +113,33 @@ class Credentials extends ActiveRecord
     public function getClient()
     {
         return ClientBuilder::build($this);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     * @return CredentialsQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new CredentialsQuery(get_called_class());
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return null|Credentials|ActiveRecord
+     */
+    public static function findOne($condition)
+    {
+        return parent::findOne($condition);
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return Credentials[]|ActiveRecord[]
+     */
+    public static function findAll($condition)
+    {
+        return parent::findAll($condition);
     }
 }

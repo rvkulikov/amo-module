@@ -26,7 +26,7 @@ class SafeDeleter_Impl extends Component implements SafeDeleter_Interface
      */
     public function delete($cfg)
     {
-        $cfg = ModelHelper::ensure($cfg, SafeDeleter_Cfg::class, true);
+        $cfg = ModelHelper::ensure($cfg, SafeDeleter_Cfg::class);
 
         /** @var ActiveRecord $class */
         $class = $cfg->definition;

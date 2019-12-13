@@ -33,6 +33,7 @@ create table amo__credentials
 	redirect_uri varchar(255) not null,
 	expires_in integer,
 	expires_at timestamp,
+	deleted_at timestamp,
 	access_token text,
 	refresh_token text not null
 );

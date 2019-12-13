@@ -22,7 +22,7 @@ class ModelHelper
      * @throws InvalidConfigException
      * @throws InvalidModelException
      */
-    public static function ensure($data, $class, $validate = false)
+    public static function ensure($data, $class, $validate = true)
     {
         if ($data instanceof $class) {
             $model = $data;

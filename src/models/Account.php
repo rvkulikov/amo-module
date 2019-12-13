@@ -80,7 +80,7 @@ class Account extends ActiveRecord
      */
     public function getCredentials()
     {
-        return $this->hasOne(Credentials::class, ['account_id' => 'id'])->inverseOf('account');
+        return $this->hasOne(Credentials::class, ['account_id' => 'id'])->inverseOf('account')->active();
     }
 
     /**

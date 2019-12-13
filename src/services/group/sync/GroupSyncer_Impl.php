@@ -40,7 +40,7 @@ class GroupSyncer_Impl extends Component implements GroupSyncer_Interface
      */
     public function sync($cfg)
     {
-        $this->cfg = ModelHelper::ensure($cfg, GroupSyncer_Cfg::class, true);
+        $this->cfg = ModelHelper::ensure($cfg, GroupSyncer_Cfg::class);
         $this->account = Account::findOne(['id' => $this->cfg->accountId]);
 
         $groups = array_map(function ($group) {

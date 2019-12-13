@@ -3,7 +3,6 @@
 namespace rvkulikov\amo\module\components\client;
 
 use Closure;
-use rvkulikov\amo\module\exceptions\InvalidModelException;
 use rvkulikov\amo\module\helpers\ModelHelper;
 use rvkulikov\amo\module\models\Account;
 use rvkulikov\amo\module\models\Credentials;
@@ -50,9 +49,6 @@ class ClientBuilder
 
             /** @var ClientBuilder_Cfg $cfg */
             $cfg = ModelHelper::ensure($cfg, ClientBuilder_Cfg::class);
-            if (!$cfg->validate()) {
-                throw new InvalidModelException($cfg);
-            }
 
             return new Client([
                 'subdomain' => $cfg->subdomain,

@@ -42,7 +42,7 @@ class PipelineSyncer_Impl extends Component implements PipelineSyncer_Interface
      */
     public function sync($cfg)
     {
-        $this->cfg = ModelHelper::ensure($cfg, PipelineSyncer_Cfg::class, true);
+        $this->cfg = ModelHelper::ensure($cfg, PipelineSyncer_Cfg::class);
         $this->account = Account::findOne(['id' => $this->cfg->accountId]);
 
         Account::getDb()->transaction(function () {

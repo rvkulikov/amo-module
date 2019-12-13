@@ -69,7 +69,7 @@ class AccountSyncer_Impl extends Component implements AccountSyncer_Interface
      */
     public function sync($cfg)
     {
-        $this->cfg = ModelHelper::ensure($cfg, AccountSyncer_Cfg::class, true);
+        $this->cfg = ModelHelper::ensure($cfg, AccountSyncer_Cfg::class);
         $this->account = Account::findOne(['id' => $this->cfg->accountId]);
 
         $client = $this->account->client;
@@ -82,7 +82,7 @@ class AccountSyncer_Impl extends Component implements AccountSyncer_Interface
         $this->syncAccount($data);
         $this->syncPipelines($data);
         $this->syncUsers($data);
-//        $this->syncCustomFields($data);
+        $this->syncCustomFields($data);
 //        $this->syncNoteTypes($data);
 //        $this->syncTaskTypes($data);
 
@@ -137,6 +137,19 @@ class AccountSyncer_Impl extends Component implements AccountSyncer_Interface
             'accountId' => $this->account->id,
             'groups' => ArrayHelper::getValue($data, '_embedded.groups', []),
             'users' => ArrayHelper::getValue($data, '_embedded.users', []),
+        ]);
+    }
+
+    /**
+     * @param $data
+     * @throws InvalidConfigException
+     * @throws InvalidModelException
+     */
+    private function syncCustomFields($data)
+    {
+        $this->customFieldSyncer->sync([
+            'accountId'    => $this->account->id,
+            'customFields' => ArrayHelper::getValue($data, '_embedded.custom_fields')
         ]);
     }
 }
