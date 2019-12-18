@@ -26,6 +26,7 @@ class Request extends \yii\httpclient\Request
     public function send()
     {
         $this->addHeaders(['Authorization' => "Bearer {$this->client->accessToken}"]);
+
         $response = parent::send();
 
         if (!$response->isOk && $response->statusCode == 401) {

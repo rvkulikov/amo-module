@@ -9,6 +9,7 @@ return [
     'rvkulikov.amo.db.username'             => '',
     'rvkulikov.amo.db.password'             => '',
     'rvkulikov.amo.auth_manager.name'       => 'authManager',
+    'rvkulikov.amo.httpclient.proxy_url'    => '',
 
     'rvkulikov.amo.tests.db.dsn'                 => 'pgsql:host=localhost;dbname=rvkulikov__amo-server-test;port=5432',
     'rvkulikov.amo.tests.db.username'            => 'postgres',
