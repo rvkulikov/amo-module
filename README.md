@@ -1,4 +1,4 @@
-#amo-module
+# amo-module
 Модуль для синхронизации всех данных из amocrm в локальную postgresql базу.  
 
 ### todo
